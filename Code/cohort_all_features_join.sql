@@ -1,9 +1,4 @@
--- =============================================================================
--- Join ALL derived concept features to cohort (VERIFIED COLUMNS)
--- =============================================================================
--- Every column name verified against information_schema. No guessing.
--- Run Steps 1, 2, and 3 in order in the SAME pgAdmin tab or psql session.
--- =============================================================================
+
 
 SET search_path TO mimiciv_derived, mimiciv_hosp, mimiciv_icu;
 
