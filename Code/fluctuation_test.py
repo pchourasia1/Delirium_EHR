@@ -1,26 +1,3 @@
-"""
-Isolation test: does the temporal fluctuation signal add anything beyond the
-static features, in the best case (classical ML, no graph, no message passing)?
-
-Three feature sets on the SAME stratified 70/15/15 split as the GNN, each scored
-with a linear model and gradient boosting, reporting ROC-AUC AND PR-AUC:
-
-    static only       23 Boruta features   (reproduces the ~0.886 classical ceiling)
-    fluctuation only  96 temporal features
-    static + fluct    119
-
-Read it like this:
-  * static+fluct ROC-AUC ~= static ROC-AUC  -> fluctuation is redundant for ranking.
-  * BUT check PR-AUC. At 4.85% prevalence ROC-AUC is dominated by the 95% negatives
-    and can be flat while the model's ability to surface true positives changes.
-    If static+fluct PR-AUC > static PR-AUC, the features DO help on the metric that
-    matters for rare-event detection -- a real result the GNN's ROC-AUC hid.
-  * fluctuation-only tells you whether the temporal features carry standalone
-    delirium signal at all (near 0.5 = essentially none; well above = real but
-    possibly already captured by the static severity scores).
-
-Needs: boruta_cohort.csv, patient_fluctuation.csv.gz  (sklearn only, no torch)
-"""
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -84,7 +61,7 @@ for name, cols in sets:
     for m, (auc, ap) in r.items():
         print(f'{name:18s} {m:8s} {auc:8.4f} {ap:8.4f}')
 
-# headline deltas (histgb, usually the stronger model)
+# headline deltas
 base_auc, base_ap = results['static only']['histgb']
 comb_auc, comb_ap = results['static + fluct']['histgb']
 print('\nfluctuation contribution on top of static (histgb):')
